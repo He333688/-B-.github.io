@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班长名称测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Arial", "微软雅黑", sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 30px;
+        }
+        /* 测试容器 */
+        .test-container {
+            background: white;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        /* 标题栏 */
+        .test-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .test-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .test-desc {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        /* 问题区域 */
+        .question-section {
+            padding: 30px 25px;
+            display: block;
+        }
+        /* 结果区域（默认隐藏） */
+        .result-section {
+            padding: 40px 25px;
+            text-align: center;
+            display: none;
+        }
+        .question-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            border: 2px solid #e2e6ea;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .option-item:hover {
+            border-color: #667eea;
+            background-color: #f0f2ff;
+        }
+        .option-item.selected {
+            border-color: #667eea;
+            background-color: #f0f2ff;
+        }
+        .option-item input {
+            width: 18px;
+            height: 18px;
+            margin-right: 14px;
+            accent-color: #667eea;
+        }
+        .option-item label {
+            font-size: 16px;
+            color: #444;
+            cursor: pointer;
+        }
+        /* 按钮样式 */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .next-btn {
+            background-color: #667eea;
+            color: white;
+        }
+        .next-btn:hover {
+            background-color: #5a6edb;
+        }
+        .restart-btn {
+            background-color: #764ba2;
+            color: white;
+            margin-top: 20px;
+        }
+        .restart-btn:hover {
+            background-color: #684291;
+        }
+        /* 结果样式 */
+        .result-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+        .result-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .result-content {
+            font-size: 18px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        /* 进度条 */
+        .progress-bar {
+            height: 6px;
+            background-color: #e9ecef;
+            margin: 0 25px 20px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 25%; /* 4个问题，初始25% */
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <!-- 标题栏 -->
+        <div class="test-header">
+            <h2 class="test-title">班长名称趣味测试</h2>
+            <p class="test-desc">回答4个小问题，测出属于你的专属班长~</p>
+        </div>
+
+        <!-- 进度条 -->
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+
+        <!-- 问题1：性别 -->
+        <div class="question-section" id="question1">
+            <h3 class="question-title">1. 你的性别是？</h3>
+            <div class="option-group">
+                <div class="option-item">
+                    <input type="radio" name="q1" id="q1-1" value="1">
+                    <label for="q1-1">男</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="q1" id="q1-2" value="2">
+                    <label for="q1-2">女</label>
+                </div>
+            </div>
+            <button class="btn next-btn" onclick="goToQuestion(2)">下一题</button>
+        </div>
+
+        <!-- 问题2：年龄 -->
+        <div class="question-section" id="question2" style="display: none;">
+            <h3 class="question-title">2. 你目前的年龄阶段是？</h3>
+            <div class="option-group">
+                <div class="option-item">
+                    <input type="radio" name="q2" id="q2-1" value="1">
+                    <label for="q2-1">12-15岁（初中）</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="q2" id="q2-2" value="2">
+                    <label for="q2-2">16-18岁（高中）</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="q2" id="q2-3" value="3">
+                    <label for="q2-3">19-22岁（大学）</label>
+                </div>
+            </div>
+            <button class="btn next-btn" onclick="goToQuestion(1)">上一题</button>
+            <button class="btn next-btn" style="margin-top: 12px;" onclick="goToQuestion(3)">下一题</button>
+        </div>
+
+        <!-- 问题3：性格 -->
+        <div class="question-section" id="question3" style="display: none;">
+            <h3 class="question-title">3. 你觉得自己的性格更偏向？</h3>
+            <div class="option-group">
+                <div class="option-item">
+                    <input type="radio" name="q3" id="q3-1" value="1">
+                    <label for="q3-1">开朗外向，喜欢热闹</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="q3" id="q3-2" value="2">
+                    <label for="q3-2">沉稳内敛，喜欢安静</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="q3" id="q3-3" value="3">
+                    <label for="q3-3">介于两者之间</label>
+                </div>
+            </div>
+            <button class="btn next-btn" onclick="goToQuestion(2)">上一题</button>
+            <button class="btn next-btn" style="margin-top: 12px;" onclick="goToQuestion(4)">下一题</button>
+        </div>
+
+        <!-- 问题4：班级角色 -->
+        <div class="question-section" id="question4" style="display: none;">
+            <h3 class="question-title">4. 你在班级里更像？</h3>
+            <div class="option-group">
+                <div class="option-item">
+                    <input type="radio" name="q4" id="q4-1" value="1">
+                    <label for="q4-1">积极活跃的组织者</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="q4" id="q4-2" value="2">
+                    <label for="q4-2">认真负责的学习者</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="q4" id="q4-3" value="3">
+                    <label for="q4-3">乐于助人的小伙伴</label>
+                </div>
+            </div>
+            <button class="btn next-btn" onclick="goToQuestion(3)">上一题</button>
+            <button class="btn next-btn" style="margin-top: 12px;" onclick="showResult()">查看结果</button>
+        </div>
+
+        <!-- 结果区域 -->
+        <div class="result-section" id="result">
+            <div class="result-icon">🎉</div>
+            <h3 class="result-title">测试结果出来啦！</h3>
+            <p class="result-content">测试出你的班长是<br>刘小桃</p>
+            <p style="color: #666; font-size: 15px; margin-bottom: 20px;">温柔细心又负责，是班级里的“暖心小太阳”哦~</p>
+            <button class="btn restart-btn" onclick="restartTest()">重新测试</button>
+        </div>
+    </div>
+
+    <script>
+        // 切换问题
+        function goToQuestion(questionNum) {
+            // 隐藏所有问题
+            document.querySelectorAll('.question-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            // 显示目标问题
+            const targetQuestion = document.getElementById(`question1`);
+            document.getElementById(`question${questionNum}`).style.display = 'block';
+            // 更新进度条
+            const progressWidth = (questionNum / 4) * 100;
+            document.getElementById('progress').style.width = `${progressWidth}%`;
+            // 检查当前问题是否已选择选项，若有则添加选中样式
+            const selectedOption = document.querySelector(`input[name="q${questionNum}"]:checked`);
+            if (selectedOption) {
+                selectedOption.closest('.option-item').classList.add('selected');
+            }
+        }
+
+        // 显示结果
+        function showResult() {
+            // 检查所有问题是否都已回答
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+            const q4 = document.querySelector('input[name="q4"]:checked');
+
+            if (q1 && q2 && q3 && q4) {
+                // 隐藏所有问题，显示结果
+                document.querySelectorAll('.question-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                document.getElementById('result').style.display = 'block';
+                // 进度条拉满
+                document.getElementById('progress').style.width = '100%';
+            } else {
+                alert('请先完成所有问题的回答哦~');
+            }
+        }
+
+        // 重新测试
+        function restartTest() {
+            // 隐藏结果，显示问题1
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('question1').style.display = 'block';
+            // 重置进度条
+            document.getElementById('progress').style.width = '25%';
+            // 清空所有选项和选中样式
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+            document.querySelectorAll('.option-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+        }
+
+        // 选项点击事件（添加选中样式）
+        document.querySelectorAll('.option-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // 清空当前问题的所有选中样式
+                const name = item.querySelector('input').name;
+                document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+                    input.closest('.option-item').classList.remove('selected');
+                });
+                // 给当前选项添加选中样式
+                item.classList.add('selected');
+                // 选中对应的单选框
+                item.querySelector('input').checked = true;
+            });
+        });
+    </script>
+</body>
+</html>
